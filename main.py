@@ -7,6 +7,7 @@ import raw_data
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JSON_AS_ASCII'] = False
 db = SQLAlchemy(app)
 
 
@@ -70,7 +71,7 @@ with app.app_context():
         order_data['end_date'] = datetime.strptime(order_data['end_date'], '%m/%d/%Y').date()
 
         new_order = Order(**order_data)
-        db.session.add(new_user)
+        db.session.add(new_order)
         db.session.commit()
 
     for offer_data in raw_data.offers:
@@ -179,7 +180,7 @@ def offers():
         return '', 201
 
 
-@app.route('/orders/<int:oid>', methods=['GET', 'PUT', 'DELETE'])
+@app.route('/offers/<int:oid>', methods=['GET', 'PUT', 'DELETE'])
 def offer(oid: int):
     if request.method == 'GET':
         offer = Offer.query.get(oid)
